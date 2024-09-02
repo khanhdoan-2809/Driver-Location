@@ -1,6 +1,6 @@
-# policy: api gateway with sqs 
-resource "aws_iam_role" "api_sqs" {
-    name = "apigateway_sqs"
+# api gateway role
+resource "aws_iam_role" "api-gateway_role" {
+    name = "apigateway_role"
 
     assume_role_policy = <<EOF
     {
@@ -19,8 +19,9 @@ resource "aws_iam_role" "api_sqs" {
     EOF
 }
 
+# policy: api gateway with sqs 
 data "template_file" "gateway_policy" {
-  template = file("${path.root}/policies/api-gateway-permission.json")
+  template = file("${path.root}/policies/api-gateway_sqs.json")
 
   vars = {
     sqs_arn   = var.mv_sqs_arn
@@ -34,8 +35,29 @@ resource "aws_iam_policy" "api_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "api_exec_role" {
-  role       =  aws_iam_role.api_sqs.name
+  role       =  aws_iam_role.api-gateway_role.name
   policy_arn =  aws_iam_policy.api_policy.arn
+}
+
+
+# policy: api gateway with dynamodb 
+data "template_file" "api-gateway_dynamodb_file" {
+  template = file("${path.root}/policies/api-gateway_dynamodb.json")
+
+  vars = {
+    dynamodb_arn   = var.mv_dynamodb_arn
+  }
+}
+
+resource "aws_iam_policy" "api-gateway_dynamodb_policy" {
+  name = "api-gateway_dynamodb_policy"
+
+  policy = data.template_file.api-gateway_dynamodb_file.rendered
+}
+
+resource "aws_iam_role_policy_attachment" "api-gateway_dynamodb_exec_role" {
+  role       =  aws_iam_role.api-gateway_role.name
+  policy_arn =  aws_iam_policy.api-gateway_dynamodb_policy.arn
 }
 
 # lambda role

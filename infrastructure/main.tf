@@ -1,7 +1,10 @@
 module "api_gateway" {
-  source        = "./modules/api_gateway"
-  mv_uri        = "arn:aws:apigateway:${var.lv_region}:sqs:path/${module.sqs.name}"
-  mv_crendtials = module.iam.sqs_arn
+  source                  = "./modules/api_gateway"
+  mv_sqs_uri              = "arn:aws:apigateway:${var.lv_region}:sqs:path/${module.sqs.name}"
+  mv_sqs_credentials      = module.iam.api-gateway_role_arn
+  mv_dynamodb_table_name  = module.dynamodb.table_name
+  mv_dynamodb_uri         = "arn:aws:apigateway:${var.lv_region}:dynamodb:action/Query"
+  mv_dynamodb_credentials = module.iam.api-gateway_role_arn
 }
 
 module "sqs" {

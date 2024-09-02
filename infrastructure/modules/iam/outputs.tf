@@ -1,5 +1,5 @@
-output "sqs_arn" {
-  value = aws_iam_role.api_sqs.arn
+output "api-gateway_role_arn" {
+  value = aws_iam_role.api-gateway_role.arn
 }
 
 output "lambda_exec_role" {

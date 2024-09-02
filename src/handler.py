@@ -6,6 +6,7 @@ from datetime import date
 
 dynamodb = boto3.client("dynamodb")
 def lambda_handler(event, context):
+    print(event)
     try:
         table_name = "DriverLocation"
         body_str = event['Records'][0]['body']
@@ -37,18 +38,21 @@ def lambda_handler(event, context):
             Item = item
         )
         
+        print("oke")
         return {
             'statusCode': 200,
             'body': json.dumps('Item inserted successfully')
         }
         
     except ClientError as e:
+        print(str(e))
         return {
             'statusCode': 500,
             'body': json.dumps(f'Error inserting item: {str(e)}')
         }
     
     except Exception as e:
+        print(str(e))
         return {
             'statusCode': 500,
             'body': json.dumps(f'Server error: {str(e)}')
