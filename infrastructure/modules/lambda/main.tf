@@ -16,7 +16,6 @@ resource "aws_lambda_function" "lambda_sqs" {
     timeout             = 30
     memory_size         = 128
 
-    
     depends_on = [var.mv_lambda_role_policy]
 }
 

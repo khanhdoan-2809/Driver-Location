@@ -19,12 +19,12 @@ resource "aws_dynamodb_table" "driver_location" {
 
   attribute {
    name = "ID"
-   type = "N"
+   type = "S"
  }
 
   attribute {
    name = "UserID"
-   type = "N"
+   type = "S"
  }
 
  attribute {
